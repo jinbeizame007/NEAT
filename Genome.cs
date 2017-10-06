@@ -99,7 +99,8 @@ namespace NEAT
             for (int i = 0; i < x.Length; i++)
                 node[i] = x[i];
             foreach ((int,int,double,bool) c in this.connection)
-                node[c.Item2] += this.Activations(this.node[c.Item1].Item1,node[c.Item1]) * c.Item3;
+                node[c.Item2] += node[c.Item1] * c.Item3;
+                //node[c.Item2] += this.Activations(this.node[c.Item1].Item1,node[c.Item1]) * c.Item3;
             double[] n = new double[this.out_n];
             double[] node_ = new double[node.Count];
             int l = 0;
@@ -198,12 +199,6 @@ namespace NEAT
         }
 
         public void MutateDeleteConnection(){
-            //Console.WriteLine("");
-            //Console.WriteLine("-------------------");
-            //Console.WriteLine(this.node);
-            //Console.WriteLine(this.connection.Count);
-            //foreach((int, int, double, bool) c in this.connection)
-            //    Console.WriteLine(c);
             if (this.connection.Count == 0) return;
             Random rnd = new System.Random();
             int key = rnd.Next(this.connection.Count);
@@ -263,6 +258,33 @@ namespace NEAT
 			//	genome.node.Add(n.Key, (n.Value.Item1, new List<int>(n.Value.Item2)));
 			genome.connection = new List<(int, int, double, bool)>(this.connection);                
             return genome;
+        }
+
+        public void PrintNode(){
+            Console.WriteLine("--Nodes--");
+            foreach (KeyValuePair < int, (string, List<int>) > n in this.node)
+			{
+                Console.Write(n.Key);
+                Console.Write(":");
+                foreach (int v in n.Value.Item2){
+                    Console.Write(v);
+                    Console.Write(" ");
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        public void PrintConection(){
+            Console.WriteLine("--Connections--");
+            foreach((int, int, double, bool) c in this.connection){
+                Console.Write("Input:");
+                Console.Write(c.Item1);
+                Console.Write(" Output:");
+                Console.Write(c.Item2);
+                Console.Write(" Weight:");
+                Console.Write(c.Item3);
+                Console.WriteLine("");
+            }
         }
     }
 }
